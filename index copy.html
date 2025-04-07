@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <!-- 引入Element Plus图标样式 -->
     <link rel="stylesheet" href="//unpkg.com/@element-plus/icons-vue@2.1.0/dist/index.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles copy.css">
 </head>
 <body>
     <div id="app">
@@ -19,7 +19,7 @@
                     <div class="header-buttons">
                         <el-button type="primary" @click="showHelp">帮助</el-button>
                         <el-button type="success" @click="refreshPage">刷新</el-button>
-                        <el-button type="info" @click="goBack">转换到价格变化模式</el-button>
+                        <el-button type="info" @click="goBack">转换到标准模式</el-button>
                     </div>
                 </div>
             </el-header>
@@ -57,27 +57,37 @@
                                     <!-- 材料选择和厚度输入区域 -->
                                     <div class="material-params">
                                         <div v-for="(layer, index) in layers" :key="index" class="material-input-group">
-                                            <span class="thickness-label">{{ index === 0 ? '最内层' : index === 3 ? '最外层' : '第' + (index + 1) + '层' }}</span>
-                                            <el-select 
-                                                v-model="layer.material" 
-                                                filterable 
-                                                clearable 
-                                                placeholder="选择材料"
-                                                class="material-select"
-                                                @change="handleMaterialChange">
-                                                <el-option
-                                                    v-for="item in materials"
-                                                    :key="item.name"
-                                                    :label="item.name"
-                                                    :value="item.name">
-                                                </el-option>
-                                            </el-select>
-                                            <el-input 
-                                                v-model="layer.thickness" 
-                                                class="thickness-input"
-                                                placeholder="厚度">
-                                                <template #append>mm</template>
-                                            </el-input>
+                                            <div class="material-row">
+                                                <span class="thickness-label">{{ index === 0 ? '最内层' : index === 3 ? '最外层' : '第' + (index + 1) + '层' }}</span>
+                                                <el-select 
+                                                    v-model="layer.material" 
+                                                    filterable 
+                                                    clearable 
+                                                    placeholder="选择材料"
+                                                    class="material-select"
+                                                    @change="handleMaterialChange">
+                                                    <el-option
+                                                        v-for="item in materials"
+                                                        :key="item.name"
+                                                        :label="item.name"
+                                                        :value="item.name">
+                                                    </el-option>
+                                                </el-select>
+                                            </div>
+                                            <div class="params-row">
+                                                <el-input 
+                                                    v-model="layer.thickness" 
+                                                    class="thickness-input"
+                                                    placeholder="厚度">
+                                                    <template #append>mm</template>
+                                                </el-input>
+                                                <el-input 
+                                                    v-model="layer.price" 
+                                                    class="price-input"
+                                                    placeholder="价格">
+                                                    <template #append>元/{{ layer.unit }}</template>
+                                                </el-input>
+                                            </div>
                                         </div>
                                     </div>
                                 </el-card>
@@ -349,7 +359,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"></script>
     
     <!-- 引入应用代码 -->
-    <script type="module" src="data.js"></script>
-    <script type="module" src="script.js"></script>
+    <script type="module" src="data copy.js"></script>
+    <script type="module" src="script copy.js"></script>
 </body>
 </html> 
