@@ -13,5 +13,4 @@ Thumbs.db
 *.tmp
 *.temp
 
-# 备份文件
-* copy.* 
+# 不需要忽略带有 copy 的文件 

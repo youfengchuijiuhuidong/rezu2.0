@@ -113,9 +113,9 @@ const app = Vue.createApp({
                 }
             });
         },
-        // 跳转到价格变化模式
+        // 返回标准模式
         goBack() {
-            window.location.href = 'index copy.html';
+            window.location.href = 'index.html';
         },
         // 获取材料标签
         getMaterialLabel(value) {
@@ -173,7 +173,9 @@ const app = Vue.createApp({
                     const material = getMaterialByName(layer.material);
                     if (material) {
                         const quantity = this.calculateMaterialQuantity(layer, index);
-                        const cost = quantity * material.price;
+                        // 使用自定义价格（如果存在），否则使用材料默认价格
+                        const price = layer.price ? parseFloat(layer.price) : material.price;
+                        const cost = quantity * price;
                         layer.cost = cost; // 保存每层的成本
                         total += cost;
                     }
@@ -204,8 +206,9 @@ const app = Vue.createApp({
                 // 计算材料用量
                 const quantity = this.calculateMaterialQuantity(layer, index);
                 
-                // 计算成本
-                const cost = quantity * material.price;
+                // 计算成本，使用自定义价格（如果存在）
+                const price = layer.price ? parseFloat(layer.price) : material.price;
+                const cost = quantity * price;
                 
                 // 计算性价比：(K/W)/万元
                 const costPerformance = (resistance / (cost / 10000)).toFixed(2);
@@ -950,6 +953,8 @@ const app = Vue.createApp({
 
         // 应用基准方案
         applyScheme(schemeNumber) {
+            console.log(`正在应用方案${schemeNumber}...`);
+            
             // 设置当前方案名称
             this.currentSchemeName = `方案${schemeNumber}`;
             
@@ -978,11 +983,25 @@ const app = Vue.createApp({
             this.envTemp = baselineSchemes[`scheme${schemeNumber}`].ambientTemperature;
             this.heatTransferCoeff = baselineSchemes[`scheme${schemeNumber}`].externalConvectionCoefficient;
             
-            // 重新计算
-            this.calculateResults();
+            console.log('方案参数设置完成:', {
+                layers: this.layers,
+                pipeInnerDiameter: this.pipeInnerDiameter,
+                pipeLength: this.pipeLength,
+                innerTemp: this.innerTemp,
+                envTemp: this.envTemp,
+                heatTransferCoeff: this.heatTransferCoeff
+            });
             
-            // 计算温度分布（不需要传递参数）
-            this.calculateTemperatureDistribution();
+            // 重新计算
+            this.$nextTick(() => {
+                this.calculateResults();
+                
+                // 确保计算完成后再进行温度分布计算
+                this.$nextTick(() => {
+                    console.log('正在计算温度分布...');
+                    this.calculateTemperatureDistribution();
+                });
+            });
         },
 
         // 方案应用函数
